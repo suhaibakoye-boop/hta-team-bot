@@ -126,17 +126,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         return
 
-    if member_key(user_id):
-        await update.message.reply_text(
-            "HTA TEAM\ncreate by : suhaib\n\n"
-            "بەخێربێیت، ئەستەک هەڵبژێرە:",
-            reply_markup=asset_keyboard()
-        )
-        return
-
     await update.message.reply_text(
-        "HTA TEAM\ncreate by : suhaib\n\n"
-        "ناوی خۆت هەڵبژێرە:",
+        "HTA TEAM\ncreate by : suhaib\n\nناوی خۆت هەڵبژێرە:",
         reply_markup=home_keyboard()
     )
 
@@ -175,7 +166,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = query.data
 
     if data.startswith("member:"):
-        await query.answer()
         key = data.split(":")[1]
 
         if MEMBERS.get(key) is None or int(MEMBERS[key]) != user_id:
@@ -184,6 +174,15 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 show_alert=True
             )
             return
+
+        await query.answer()
+        context.user_data["member"] = key
+
+        await query.edit_message_text(
+            f"بەخێربێیت {NAMES[key]}، ئەستەک هەڵبژێرە:",
+            reply_markup=asset_keyboard()
+        )
+        return
 
         context.user_data["member"] = key
 
